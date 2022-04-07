@@ -247,15 +247,18 @@ func main() {
 	}
 }
 
+func setLogError(err error, msg string) {
+	setupLog.Error(err, msg)
+	os.Exit(1)
+}
+
 func setupChecks(mgr ctrl.Manager) {
 	if err := mgr.AddReadyzCheck("webhook", mgr.GetWebhookServer().StartedChecker()); err != nil {
-		setupLog.Error(err, "unable to create ready check")
-		os.Exit(1)
+		setLogError(err, "unable to create ready check")
 	}
-
+	
 	if err := mgr.AddHealthzCheck("webhook", mgr.GetWebhookServer().StartedChecker()); err != nil {
-		setupLog.Error(err, "unable to create health check")
-		os.Exit(1)
+		setLogError(err, "unable to create health check")
 	}
 }
 
